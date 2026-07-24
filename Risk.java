@@ -1,11 +1,9 @@
-package projman;
-
 import java.io.Serializable;
 
 public class Risk implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    
+
     private String riskName;
     private String riskDescription;
     private boolean riskCompletedStatus;

@@ -1,5 +1,3 @@
-package projman;
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -33,13 +31,13 @@ public class Main {
                     System.out.println("1) For Simple Project");
                     System.out.println("2) For Full Project");
                     System.out.print("Choose: ");
-                
+
                     int type = sc.nextInt();
                     sc.nextLine(); // consume newline
-                
+
                     ProjectCreator creator = new ProjectCreator(sc);
                     Project p;
-                
+
                     switch (type) {
                         case 1:
                             p = creator.createProjectSimple();
@@ -55,7 +53,7 @@ public class Main {
                             System.out.println("Invalid selection.");
                             break;
                     }
-                
+
                     break;
                 }
 
@@ -66,13 +64,13 @@ public class Main {
                         System.out.println("No projects found. Create one first.");
                         break;
                     }
-                
+
                     // list projects with indexes
                     System.out.println("Projects:");
                     for (int i = 0; i < projects.size(); i++) {
                         System.out.println((i + 1) + ") " + projects.get(i).getName());
                     }
-                
+
                     System.out.print("Which project number do you want to edit? ");
                     int idx;
                     try {
@@ -83,21 +81,41 @@ public class Main {
                         sc.nextLine();
                         break;
                     }
-                
+
                     if (idx < 1 || idx > projects.size()) {
                         System.out.println("That project number does not exist.");
                         break;
                     }
-                
+
                     Project selected = projects.get(idx - 1);
-                
+
                     // edit using ProjectEditor
+                    System.out.print("Would you like to edit basic project information, add risks, add requirements, or log hours?\n0) Edit Project Info\n1) Add Risks\n2) Add Requirements\n3) Remove Risks\n4) Remove Requirements\n5) Log Risk Hours\n6) Log Requirement Hours\nChoose: ");
+                    int editChoice;
+                    try {
+                        editChoice = sc.nextInt();
+                        sc.nextLine(); // consume newline
+                    } catch (Exception e) {
+                        System.out.println("Invalid input.");
+                        sc.nextLine();
+                        break;
+                    }
                     ProjectEditor editor = new ProjectEditor(sc);
-                    editor.editProjectBasics(selected);
-                
+
+                    switch (editChoice) {
+                        case 0 -> editor.editProjectBasics(selected);
+                        case 1 -> editor.addRisks(selected);
+                        case 2 -> editor.addRequirements(selected);
+                        case 3 -> editor.removeRisks(selected);
+                        case 4 -> editor.removeRequirements(selected);
+                        case 5 -> editor.logRiskHours(selected);
+                        case 6 -> editor.logRequirementHours(selected);
+                        default -> System.out.println("Invalid input.");
+                    }
+
                     // overwrite DB with updated list
                     db.saveAllProjects(projects);
-                
+
                     System.out.println("Project updated!");
                     break;
                 }
@@ -118,12 +136,29 @@ public class Main {
                         System.out.println("Name: " + p.getName());
                         System.out.println("Description: " + p.getDescription());
                         System.out.println("Manager: " + p.getManagerName());
-                        /* you'll need to print the risk and requirement array lists here
-                        */
+                        System.out.println("--Segment Times--");
+                        System.out.println("Requirements Analysis: " + p.getSectionTime(0) + " hours");
+                        System.out.println("Design: " + p.getSectionTime(1)+ " hours");
+                        System.out.println("Coding: " + p.getSectionTime(2)+ " hours");
+                        System.out.println("Testing: " + p.getSectionTime(3)+ " hours");
+                        System.out.println("Project Management: " + p.getSectionTime(4)+ " hours");
+                        System.out.println("Team Members: ");
+                        for (String member : p.getTeamMembers()){
+                            System.out.println("\t" + member);
+                        }
+                        System.out.println("Risks: ");
+                        for (Risk r : p.getRisks()){
+                            System.out.println("\t" + r);
+                        }
+                        System.out.println("Requirements: ");
+                        for (Requirement req : p.getRequirements()){
+                            System.out.println("\t" + req);
+                        }
                     }
                     System.out.println();
                     break;
                 }
+
 
                 case 0: {
                     System.out.println("Goodbye!");

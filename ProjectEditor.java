@@ -1,5 +1,3 @@
-package projman;
-
 import java.util.Scanner;
 
 public class ProjectEditor {
@@ -31,12 +29,291 @@ public class ProjectEditor {
         if (!newManager.isEmpty()) {
             p.setManagerName(newManager);
         }
-        
-        /* create array lists editor for the risks and requirements and store them in the new project return 
+
+        /* create array lists editor for the risks and requirements and store them in the new project return
         statement below. I'd recommend using the team members arraylist  in ProjectCreator.java above as a blueprint to accomplish that
-        
+
         */
 
         System.out.println("Done editing.");
     }
+
+    public void addRisks(Project p) {
+        boolean adding = true;
+    
+        while (adding) {
+            System.out.println("Choose a name for this risk: ");
+            String riskName = sc.nextLine().trim();
+    
+            System.out.println("Write a description for this risk: ");
+            String riskDescription = sc.nextLine();
+    
+            Risk r = new Risk(riskName, riskDescription);
+            p.addRisk(r);
+    
+            System.out.println("Risk added. Would you like to add another? \n0) Add another Requirement\n1) Continue");
+    
+            int repeat = -1;
+            while (repeat != 0 && repeat != 1) {
+                try {
+                    repeat = sc.nextInt();
+                    sc.nextLine(); // consume newline
+                } catch (Exception e) {
+                    sc.nextLine(); // clear bad input
+                    repeat = -1;
+                }
+                if (repeat != 0 && repeat != 1) {
+                    System.out.println("Please enter a valid number (0 or 1).");
+                }
+            }
+    
+            adding = (repeat == 0);
+        }
+    }
+
+
+
+    public void addRequirements(Project p) {
+        boolean adding = true;
+    
+        while (adding) {
+            System.out.println("Choose a name for this requirement: ");
+            String reqName = sc.nextLine().trim();
+    
+            System.out.println("Write a description for this requirement: ");
+            String reqDescription = sc.nextLine();
+    
+            int boolInput = -1;
+            while (boolInput != 0 && boolInput != 1) {
+                System.out.println("Is this requirement a functional requirement? \n0) Functional\n1) Nonfunctional");
+                try {
+                    boolInput = sc.nextInt();
+                    sc.nextLine(); // consume newline
+                } catch (Exception e) {
+                    System.out.println("Please enter a valid number.");
+                    sc.nextLine(); // clear bad input
+                    boolInput = -1;
+                }
+            }
+    
+            boolean isFunct = (boolInput == 0);
+            Requirement r = new Requirement(reqName, reqDescription, isFunct);
+            p.addRequirement(r);
+    
+            System.out.println("Requirement added. Would you like to add another? \n0) Add another Requirement\n1) Continue");
+    
+            int repeat = -1;
+            while (repeat != 0 && repeat != 1) {
+                try {
+                    repeat = sc.nextInt();
+                    sc.nextLine(); // consume newline
+                } catch (Exception e) {
+                    System.out.println("Please enter a valid number.");
+                    sc.nextLine(); // clear bad input
+                    repeat = -1;
+                }
+            }
+    
+            adding = (repeat == 0);
+        }
+    }
+
+
+    public void removeRisks(Project p){
+        if(p.getRisks().isEmpty()){
+            System.out.println("No Risks to remove.");
+            return;
+        }
+        System.out.println("Which Risk should be removed? ");
+        int input = -1;
+        int counter = 0;
+        for (Risk r : p.getRisks()){
+            System.out.println(counter + ") " + r);
+            counter++;
+        }
+        while(input == -1 || input > p.getRisks().size()) {
+            try {
+                input = sc.nextInt();
+                sc.nextLine(); // consume newline
+            } catch (Exception e) {
+                System.out.println("Please enter a valid number.");
+                sc.nextLine(); // clear bad input
+            }
+        }
+        p.removeRisk(p.getRisks().get(input));
+        System.out.println("Risk successfully removed.");
+    }
+
+    public void removeRequirements(Project p){
+        if(p.getRequirements().isEmpty()){
+            System.out.println("No Requirements to remove.");
+            return;
+        }
+        System.out.println("Which Requirement should be removed? ");
+        int input = -1;
+        int counter = 0;
+        for (Requirement r : p.getRequirements()){
+            System.out.println(counter + ") " + r);
+            counter++;
+        }
+        while(input == -1 || input > p.getRequirements().size()) {
+            try {
+                input = sc.nextInt();
+                sc.nextLine(); // consume newline
+            } catch (Exception e) {
+                System.out.println("Please enter a valid number.");
+                sc.nextLine(); // clear bad input
+            }
+        }
+        p.removeRequirement(p.getRequirements().get(input));
+        System.out.println("Risk successfully removed.");
+    }
+
+
+    public void logRiskHours(Project p){
+        if(p.getRisks().isEmpty()){
+            System.out.println("No risks added to project.");
+            return;
+        }
+
+        System.out.println("Logging Hours for project: " + p.getName());
+
+        System.out.println("Choose which risk you would like to log hours for: ");
+        for(int i = 0; i < p.getRisks().size(); i++){
+            System.out.println(i + ") " + p.getRisks().get(i).getRiskName() + " " + p.getRisks().get(i).getRiskDescription());
+        }
+        int riskIndex = -1;
+        while(riskIndex == -1|| riskIndex>p.getRequirements().size()) {
+            try {
+                riskIndex = sc.nextInt();
+                sc.nextLine(); // consume newline
+            } catch (Exception e) {
+                sc.nextLine(); // clear bad input
+            }
+            System.out.println("Please enter a valid number.");
+        }
+
+        Risk riskChoice = p.getRisks().get(riskIndex);
+
+        System.out.print("How many hours would you like to log for this risk? ");
+        double riskHours = -1.0;
+        while(riskHours <= 0) {
+            try {
+                riskHours = sc.nextDouble();
+                sc.nextLine(); // consume newline
+            } catch (Exception e) {
+                System.out.println("Please enter a valid number.");
+                sc.nextLine(); // clear bad input
+            }
+        }
+
+        riskChoice.updateRiskHours(riskHours);
+
+        System.out.println("Choose what section this risk has impacted: \n0) Analysis\n1) Design\n2) Coding\n3) Testing\n4) Management");
+        int section = -1;
+        while(section == -1 || section > 4) {
+            try {
+                section = sc.nextInt();
+                sc.nextLine(); // consume newline
+                break;
+            } catch (Exception e) {
+                System.out.println("Please enter a valid number.");
+                sc.nextLine(); // clear bad input
+            }
+        }
+        p.updateSectionTime(section,riskHours);
+
+        System.out.println("Has this risk been completed?: \n0) Yes\n1) No");
+        int completed = -1;
+        while(completed != 1 && completed != 0) {
+            try {
+                completed = sc.nextInt();
+                sc.nextLine(); // consume newline
+                break;
+            } catch (Exception e) {
+                System.out.println("Please enter a valid number.");
+                sc.nextLine(); // clear bad input
+            }
+        }
+        switch(completed){
+            case 0 -> riskChoice.setRiskStatus(true);
+            case 1 -> riskChoice.setRiskStatus(false);
+        }
+
+
+        System.out.println("Done logging hours.");
+    }
+
+
+    public void logRequirementHours(Project p){
+        if(p.getRequirements().isEmpty()){
+            System.out.println("No requirements added to project.");
+            return;
+        }
+
+        System.out.println("Logging Hours for project: " + p.getName());
+
+        System.out.println("Choose which requirement you would like to log hours for: ");
+        for(int i = 0; i < p.getRequirements().size(); i++){
+            System.out.println(i + ") " + p.getRequirements().get(i).getReqName()+ " Functional:(" + p.getRequirements().get(i).isFunctional() + ") " + p.getRequirements().get(i).getReqDescription());
+        }
+        int reqIndex = -1;
+        while(reqIndex == -1 || reqIndex>p.getRequirements().size()) {
+            try {
+                reqIndex = sc.nextInt();
+                sc.nextLine(); // consume newline
+            } catch (Exception e) {
+                System.out.println("Please enter a valid number.");
+                sc.nextLine(); // clear bad input
+            }
+        }
+
+        Requirement requirementChoice = p.getRequirements().get(reqIndex);
+
+        System.out.print("How many hours would you like to log for this requirement? ");
+        double reqHours = -1.0;
+        while(reqHours <= 0) {
+            try {
+                reqHours = sc.nextDouble();
+                sc.nextLine(); // consume newline
+            } catch (Exception e) {
+                System.out.println("Please enter a valid number.");
+                sc.nextLine(); // clear bad input
+            }
+        }
+
+        requirementChoice.updateReqHours(reqHours);
+
+        System.out.println("Choose what section this risk has impacted: \n0) Analysis\n1) Design\n2) Coding\n3) Testing\n4) Management");
+        int section = -1;
+        while(section < 0 || section > 4) {
+            try {
+                section = sc.nextInt();
+                sc.nextLine(); // consume newline
+            } catch (Exception e) {
+                System.out.println("Please enter a valid number.");
+                sc.nextLine(); // clear bad input
+            }
+        }
+        p.updateSectionTime(section,reqHours);
+        System.out.println("Has this requirement been completed?: \n0) Yes\n1) No");
+        int completed = -1;
+        while(completed != 1 && completed != 0) {
+            try {
+                completed = sc.nextInt();
+                sc.nextLine(); // consume newline
+            } catch (Exception e) {
+                System.out.println("Please enter a valid number.");
+                sc.nextLine(); // clear bad input
+            }
+        }
+        switch(completed){
+            case 0 -> requirementChoice.setReqCompletedStatus(true);
+            case 1 -> requirementChoice.setReqCompletedStatus(false);
+        }
+
+
+        System.out.println("Done logging hours.");
+    }
+
 }

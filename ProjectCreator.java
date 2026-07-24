@@ -1,5 +1,3 @@
-package projman;
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -18,7 +16,7 @@ public class ProjectCreator {
         return new Project(name);
     }
 
-    // Create a project with full details (name, description, manager, team, risks, requirements)
+    // Create a project with full details (name, description, manager, team members)
     public Project createProjectFull() {
         System.out.print("Enter project name: ");
         String name = sc.nextLine().trim();
@@ -38,15 +36,24 @@ public class ProjectCreator {
             teamMembers.add(sc.nextLine().trim());
         }
         
-        ArrayList<Risk> risks = new ArrayList<>(); //placeholders
-        ArrayList<Requirement> requirements = new ArrayList<>(); //placeholders
-
-        /* create array lists for the risks and requirements and store them in the new project return 
-        statement below. I'd recommend using the team members arraylist above as a blueprint to accomplish that
+        Project projectObject;
+        projectObject = new Project(name, description, managerName, teamMembers);
         
-        */
-
-        return new Project(name, description, managerName, teamMembers, risks, requirements);
+        ProjectEditor createrisksandreqs = new ProjectEditor(sc);
+        
+        System.out.print("Do you want to add risks(yes or no): ");
+        String risksChoice = sc.nextLine().trim();
+        if (!risksChoice.isEmpty()) {
+            createrisksandreqs.addRisks(projectObject);
+        }
+        
+        System.out.print("Do you want to add requirements(yes or no): ");
+        String requirementsChoice = sc.nextLine().trim();
+        if (!requirementsChoice.isEmpty()) {
+            createrisksandreqs.addRequirements(projectObject);
+        }   
+        
+        return projectObject;
     }
 
     // Helper to safely read an int from the scanner

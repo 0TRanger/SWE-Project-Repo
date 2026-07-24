@@ -1,10 +1,8 @@
-package projman;
-
 import java.io.Serializable;
 
 public class Requirement implements Serializable {
     private static final long serialVersionUID = 1L;
-    
+
     private String reqName;
     private String reqDescription;
     private boolean isFunctional;

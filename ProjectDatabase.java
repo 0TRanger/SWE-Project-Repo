@@ -1,5 +1,3 @@
-package projman;
-
 import java.io.*;
 import java.util.ArrayList;
 
@@ -35,7 +33,7 @@ public class ProjectDatabase {
             System.out.println("Failed to save projects: " + e.getMessage());
         }
     }
-    
+
     public void saveAllProjects(ArrayList<Project> projects) {
         writeProjects(projects);
     }

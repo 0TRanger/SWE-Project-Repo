@@ -1,5 +1,3 @@
-package projman;
-
 import java.util.ArrayList;
 import java.io.Serializable;
 
@@ -12,15 +10,18 @@ public class Project implements Serializable {
     private ArrayList<String> teamMembers;
     private ArrayList<Risk> risks;
     private ArrayList<Requirement> requirements;
+    private double hoursAnalysis;
+    private double hoursDesign;
+    private double hoursCoding;
+    private double hoursTesting;
+    private double hoursManagement;
 
     /**
-     * Full Constructor with all parameters for class variables. (I decided to write more constructors than we will need, and we can decide which ones are the best to keep when integrating the console menu inputs.)
+     * Full Constructor with all parameters for class variables.
      * @param name The name of the project. Does not need to be unique, as the descriptions can help differentiate the projects
      * @param description A short project description for labeling purposes
-     * @param managerName The name of the project manager if there is one, can be empty (I am unsure if the Manager name should be added to the teamMember list, but I didn't think it was correct, so I did not implement it)
+     * @param managerName The name of the project manager if there is one, can be empty
      * @param teamMembers A list of all the team members on the project
-     * @param risks A list of all the risks associated with the project
-     * @param requirements A list of all the requirements associated with the project. Ideally we can use one Requirement interface and extend it with both functional and non-functional requirement types
      */
     public Project(String name, String description, String managerName, ArrayList<String> teamMembers, ArrayList<Risk> risks, ArrayList<Requirement> requirements){
         this.name = name;
@@ -29,6 +30,25 @@ public class Project implements Serializable {
         this.teamMembers = teamMembers;
         this.risks = risks;
         this.requirements = requirements;
+        hoursAnalysis = 0;
+        hoursDesign = 0;
+        hoursCoding = 0;
+        hoursTesting = 0;
+        hoursManagement = 0;
+    } 
+     
+    public Project(String name, String description, String managerName, ArrayList<String> teamMembers){
+        this.name = name;
+        this.description = description;
+        this.managerName = managerName;
+        this.teamMembers = teamMembers;
+        this.risks = new ArrayList<Risk>();
+        this.requirements = new ArrayList<Requirement>();
+        hoursAnalysis = 0;
+        hoursDesign = 0;
+        hoursCoding = 0;
+        hoursTesting = 0;
+        hoursManagement = 0;
     }
 
     public Project(String name, String description, String managerName){
@@ -38,6 +58,11 @@ public class Project implements Serializable {
         this.teamMembers = new ArrayList<String>();
         this.risks = new ArrayList<Risk>();
         this.requirements = new ArrayList<Requirement>();
+        hoursAnalysis = 0;
+        hoursDesign = 0;
+        hoursCoding = 0;
+        hoursTesting = 0;
+        hoursManagement = 0;
     }
 
     public Project(String name, String description){
@@ -47,6 +72,11 @@ public class Project implements Serializable {
         this.teamMembers = new ArrayList<String>();
         this.risks = new ArrayList<Risk>();
         this.requirements = new ArrayList<Requirement>();
+        hoursAnalysis = 0;
+        hoursDesign = 0;
+        hoursCoding = 0;
+        hoursTesting = 0;
+        hoursManagement = 0;
     }
 
     /**
@@ -60,6 +90,11 @@ public class Project implements Serializable {
         this.teamMembers = new ArrayList<String>();
         this.risks = new ArrayList<Risk>();
         this.requirements = new ArrayList<Requirement>();
+        hoursAnalysis = 0;
+        hoursDesign = 0;
+        hoursCoding = 0;
+        hoursTesting = 0;
+        hoursManagement = 0;
     }
 
     /*
@@ -85,6 +120,26 @@ public class Project implements Serializable {
     }
     public void setManagerName(String managerName) {
         this.managerName = managerName;
+    }
+
+    public double getSectionTime(int segment) {
+        return switch (segment) {
+            case 0 -> hoursAnalysis;
+            case 1 -> hoursDesign;
+            case 2 -> hoursCoding;
+            case 3 -> hoursTesting;
+            case 4 -> hoursManagement;
+            default -> 0;
+        };
+    }
+    public void updateSectionTime(int segment, double hours) {
+        switch (segment) {
+            case 0 -> hoursAnalysis+=hours;
+            case 1 -> hoursDesign+=hours;
+            case 2 -> hoursCoding+=hours;
+            case 3 -> hoursTesting+=hours;
+            case 4 -> hoursManagement+=hours;
+        }
     }
 
     public ArrayList<String> getTeamMembers() {
